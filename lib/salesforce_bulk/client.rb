@@ -171,8 +171,10 @@ module SalesforceBulk
 
       result = []
 
+      csv_text = lines.join.force_encoding('utf-8').gsub!("\r\n", "\n")
+
       #CSV.parse(lines.join, :headers => headers, :converters => [:all, lambda{|s| s.to_b if s.kind_of? String }]) do |row|
-      CSV.parse(lines.join, :headers => headers) do |row|
+      CSV.parse(csv_text, :headers => headers) do |row|
         result << Hash[row.headers.zip(row.fields)]
       end
 
