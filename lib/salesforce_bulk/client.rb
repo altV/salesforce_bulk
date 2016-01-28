@@ -162,6 +162,17 @@ module SalesforceBulk
       end
     end
 
+    def batch_result_raw(jobId, batchId)
+      Nokogiri.parse( http_get("job/#{jobId}/batch/#{batchId}/result").body ).
+        css('result').map &:text
+    end
+
+    def query_result_raw(job_id, batch_id, result_id)
+      headers = {"Content-Type" => "text/csv; charset=UTF-8"}
+      response = http_get("job/#{job_id}/batch/#{batch_id}/result/#{result_id}", headers)
+      response.body.force_encoding 'utf-8'
+    end
+
     def query_result(job_id, batch_id, result_id)
       headers = {"Content-Type" => "text/csv; charset=UTF-8"}
       response = http_get("job/#{job_id}/batch/#{batch_id}/result/#{result_id}", headers)
